@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
 
 DB_PATH = os.environ.get("DUCKDB_PATH", str(ROOT / "weather.duckdb"))
-MODEL_NAME = "gemini-1.5-flash"  # free-tier friendly
+MODEL_NAME = "gemini-3.6-flash"  # free-tier friendly
 RATE_LIMIT_SLEEP_SECONDS = 4.5  # keep comfortably under free-tier RPM
 
 
@@ -31,7 +31,9 @@ def get_rows(con, limit=None):
     query = "select * from main_marts.fct_daily_weather order by city_name, obs_date"
     if limit:
         query += f" limit {limit}"
-    return con.execute(query).fetch_df().to_dict(orient="records")
+    result = con.execute(query)
+    columns = [desc[0] for desc in result.description]
+    return [dict(zip(columns, row)) for row in result.fetchall()]
 
 
 def ensure_output_table(con):
@@ -108,7 +110,7 @@ def main():
             ON CONFLICT (station_id, obs_date) DO UPDATE SET
                 narrative = excluded.narrative,
                 model = excluded.model,
-                generated_at = current_timestamp;
+                generated_at = now();
             """,
             [row["station_id"], row["city_name"], row["obs_date"], narrative, MODEL_NAME],
         )
