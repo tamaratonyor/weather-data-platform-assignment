@@ -89,7 +89,7 @@ shipped:
   double-count one. Verified it catches both failure modes by testing
   against synthetic data with decoy stations (`CALGARY SPRINGBANK`,
   `OTTAWA GATINEAU`, etc.) that must NOT match.
-  - Keyword matching alone was still not enough to uniquely resolve a city.
+- Keyword matching alone was still not enough to uniquely resolve a city.
   Real GHCN data has multiple stations per major city: historical records,
   renamed airports, secondary airports (Montreal also has Mirabel), and
   duplicate entries for the same airport under a different network code
