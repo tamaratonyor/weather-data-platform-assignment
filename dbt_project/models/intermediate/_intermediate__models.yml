@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: int_target_stations
+    description: >
+      Resolves the target-city config (seeds/target_cities.csv) against
+      station metadata to produce the list of stations in scope. This is
+      the single point of station selection -- nothing downstream should
+      ever filter on a literal station_id.
+    columns:
+      - name: station_id
+        tests: [not_null, unique]
+      - name: city_name
+        tests: [not_null]
+
+  - name: int_observations_pivoted
+    description: >
+      One row per station-date with one column per supported element
+      (from the `supported_elements` var), filtered to only station/element
+      combinations that ghcnd-inventory.txt confirms are actually reported
+      in that year.
+    columns:
+      - name: station_id
+        tests: [not_null]
+      - name: obs_date
+        tests: [not_null]

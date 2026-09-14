@@ -1,0 +1,6 @@
+city_name,country_code,match_keywords,notes
+Toronto,CA,TORONTO;INTL,"largest metro area; real GHCN station name is TORONTO INTL A -- no Pearson/Lester B in this record"
+Montreal,CA,MONTREAL;INTL,"2nd largest metro area; real GHCN station name is MONTREAL INTL A -- no Trudeau in this record"
+Vancouver,CA,VANCOUVER;INTL,3rd largest metro area
+Calgary,CA,CALGARY;INTL,4th largest metro area
+Ottawa,CA,OTTAWA;INTL,"5th largest metro area (national capital); real name is OTTAWA INT'L -- apostrophe stripped by the normalization in int_target_stations.sql, no trailing A"

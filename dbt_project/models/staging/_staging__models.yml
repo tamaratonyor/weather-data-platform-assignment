@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_stations
+    description: One row per GHCN station, cleaned and typed.
+    columns:
+      - name: station_id
+        tests: [not_null, unique]
+
+  - name: stg_inventory
+    description: Element/year-range availability per station.
+    columns:
+      - name: station_id
+        tests: [not_null]
+      - name: element
+        tests: [not_null]
+
+  - name: stg_observations
+    description: Daily station-date-element observations, typed and unit-converted, scoped to the configured date window.
+    columns:
+      - name: station_id
+        tests: [not_null]
+      - name: obs_date
+        tests: [not_null]
+      - name: element
+        tests: [not_null]
+      - name: qflag
+        tests:
+          - accepted_values:
+              values: ['D', 'G', 'I', 'K', 'L', 'M', 'N', 'O', 'R', 'S', 'T', 'W', 'X', 'Z']
+              quote: true
+              config:
+                severity: warn

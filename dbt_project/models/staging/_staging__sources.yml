@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: observations
+        description: Raw daily station-date-element observations, loaded from GHCN per-station CSVs.
+        columns:
+          - name: station_id
+            tests: [not_null]
+          - name: date_raw
+            tests: [not_null]
+          - name: element
+            tests: [not_null]
+      - name: stations
+        description: Station metadata parsed from ghcnd-stations.txt fixed-width file.
+        columns:
+          - name: station_id
+            tests: [not_null, unique]
+      - name: inventory
+        description: Which elements each station reports and for what year range.
+      - name: countries
+        description: 2-letter country code to country name mapping.

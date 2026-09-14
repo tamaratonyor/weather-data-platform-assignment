@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: dim_stations
+    description: One row per target station.
+    columns:
+      - name: station_id
+        tests: [not_null, unique]
+      - name: city_name
+        tests: [not_null]
+
+  - name: fct_daily_weather
+    description: One row per station-date with core weather elements, ready for narrative generation.
+    columns:
+      - name: station_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stations')
+              field: station_id
+      - name: obs_date
+        tests: [not_null]
+      - name: tmax_c
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: -60
+              max_value: 55
+              config:
+                severity: warn
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [station_id, obs_date]
+      - dbt_utils.expression_is_true:
+          expression: "tmax_c >= tmin_c"
+          config:
+            severity: warn
+            where: "tmax_c is not null and tmin_c is not null"
+
+  - name: dq_observation_coverage
+    description: Monthly completeness and QC-flag rate per station, for spotting data quality issues before narrative generation.

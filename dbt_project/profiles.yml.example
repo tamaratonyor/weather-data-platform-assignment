@@ -1,0 +1,8 @@
+# Copy to ~/.dbt/profiles.yml (or set DBT_PROFILES_DIR to this folder)
+weather_data_platform:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../weather.duckdb"   # same file load_to_duckdb.py writes to
+      threads: 4
