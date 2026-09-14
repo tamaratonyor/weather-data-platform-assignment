@@ -89,6 +89,18 @@ shipped:
   double-count one. Verified it catches both failure modes by testing
   against synthetic data with decoy stations (`CALGARY SPRINGBANK`,
   `OTTAWA GATINEAU`, etc.) that must NOT match.
+  - Keyword matching alone was still not enough to uniquely resolve a city.
+  Real GHCN data has multiple stations per major city: historical records,
+  renamed airports, secondary airports (Montreal also has Mirabel), and
+  duplicate entries for the same airport under a different network code
+  (Calgary has three "INTL"-ish records). A "most recently reporting
+  station wins" tiebreaker seemed like the obvious fix but actually breaks
+  on Calgary — one of its duplicate/historical records has *more recent*
+  data than the intended station. The working fix: require the matched
+  station to actually have downloaded observation data
+  (`ingestion/download_data.py`'s hardcoded list is the only place that
+  determines this) — see `int_target_stations.sql` for the full
+  reasoning.
 
 The one exception is `ingestion/download_data.py`, which has a hardcoded
 list of station IDs to know *which observation files to fetch from NOAA*.
